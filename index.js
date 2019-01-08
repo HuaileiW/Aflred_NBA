@@ -26,15 +26,14 @@ const gameStatus = matchPeriod => isBeforeStart(matchPeriod) ?
   '直播中' :
   '已结束';
 
-const getTitle = ({ rightName, leftName, leftGoal, rightGoal, isPay,  matchPeriod }) => {
+const getTitle = ({ rightName, leftName, leftGoal, rightGoal, matchPeriod }) => {
   const beforeGame = isBeforeStart(matchPeriod);
   const isLive = isGameLive(matchPeriod);
-  const showVip = isPay === '1' && (beforeGame || isLive) ? ' 会员' : '';
   const title = beforeGame ?
     `${leftName} @ ${rightName}` :
     `${leftName}(${leftGoal}) @ ${rightName}(${rightGoal})`;
 
-  return `${title}${showVip} ${gameStatus(matchPeriod)}`;
+  return `${title} ${gameStatus(matchPeriod)}`;
 }
 
 const getSubTitle = ({ startTime: gameTime, matchPeriod }) => {
@@ -42,7 +41,7 @@ const getSubTitle = ({ startTime: gameTime, matchPeriod }) => {
   const isInToday = isTodaysGame(gameTime);
 
   return beforeGame ?
-    `${moment(gameTime).format('MM-DD')} 距离开始还有${moment(gameTime).diff(moment(), 'hours')}小时` :
+    `${moment(gameTime).format('MM-DD HH:mm')} 距离开始还有${moment(gameTime).diff(moment(), 'hours')}小时` :
     isTodaysGame(gameTime) ? '今日' : ''
 }
 
@@ -50,7 +49,7 @@ const mapData = (games) => {
   let items = [];
   for (let date in games) {
     games[date].forEach(game => {
-      const { webUrl, matchPeriod } = game;
+      const { webUrl, matchPeriod, isPay } = game;
       const beforeGame = isBeforeStart(matchPeriod);
       const title = getTitle(game)
       const subtitle = getSubTitle(game);
@@ -59,6 +58,12 @@ const mapData = (games) => {
         title,
         subtitle,
         arg: webUrl,
+      }
+
+      if (isPay === '1') {
+        item.icon = {
+          path: './vip.png',
+        }
       }
       items.push(item);
     })
