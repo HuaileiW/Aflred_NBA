@@ -1,53 +1,72 @@
 const alfy = require('alfy');
 const moment = require('moment');
 const flow = require('lodash').flow;
-const sortBy = require('lodash').sortBy;
-const getTeamCnName = require('./teamTricode.js');
 
-const currentHour = moment().hour();
-const today = currentHour > 0 ?
-  moment().subtract(1, 'day') :
-  moment();
-const apiDate = today.format('YYYYMMDD');
+const startTime = moment().format('YYYY-MM-DD');
+const endTime = moment().add('3', 'day').format('YYYY-MM-DD');
 
-alfy.fetch(`https://data.nba.net/prod/v2/${apiDate}/scoreboard.json`, {
-  transform: ({ numGames, games }) => ({ numGames, games }),
+alfy.fetch(`https://matchweb.sports.qq.com/kbs/list?from=NBA_PC&columnId=100000&startTime=${startTime}&endTime=${endTime}`, {
+  transform: ({ data }) => ({ ...data }),
 })
-  .then(({ numGames, games }) => {
-    const titleItem = {
-      title: `今日(${moment().format('MM-DD')})比赛场次 ${numGames}场`,
-    }
-
+  .then((games) => {
     const items = dataFlow(games);
 
-    alfy.output([].concat(titleItem, items));
+    alfy.output(items);
   })
   .catch(error => {
-    alfy.error(`出错了... ${error}`)
+    alfy.error(`出错了...  ${error}`)
   });
 
+const isTodaysGame = gameTime => moment().endOf('day') > moment(gameTime);
+const isBeforeStart = matchPeriod => matchPeriod === '0';
+const isGameLive = matchPeriod => matchPeriod === '1';
+const gameStatus = matchPeriod => isBeforeStart(matchPeriod) ?
+  '未开始' :
+  isGameLive(matchPeriod) ?
+  '直播中' :
+  '已结束';
 
-const mapData = (games) => games.map(game => {
-  const { hTeam, vTeam } = game;
-  // const hRecord = `${hTeam.win}-${hTeam.loss}`
-  // const vRecord = `${vTeam.win}-${vTeam.loss}`
-  const hTeamName = getTeamCnName(hTeam.triCode);
-  const vTeamName = getTeamCnName(vTeam.triCode);
-  const { text: subtitle } = game.nugget;
+const getTitle = ({ rightName, leftName, leftGoal, rightGoal, isPay,  matchPeriod }) => {
+  const beforeGame = isBeforeStart(matchPeriod);
+  const isLive = isGameLive(matchPeriod);
+  const showVip = isPay === '1' && (beforeGame || isLive) ? ' 会员' : '';
+  const title = beforeGame ?
+    `${leftName} @ ${rightName}` :
+    `${leftName}(${leftGoal}) @ ${rightName}(${rightGoal})`;
 
-  return {
-    title: `${vTeamName}(${vTeam.score}) @ ${hTeamName}(${hTeam.score})`,
-    subtitle,
+  return `${title}${showVip} ${gameStatus(matchPeriod)}`;
+}
+
+const getSubTitle = ({ startTime: gameTime, matchPeriod }) => {
+  const beforeGame = isBeforeStart(matchPeriod);
+  const isInToday = isTodaysGame(gameTime);
+
+  return beforeGame ?
+    `${moment(gameTime).format('MM-DD')} 距离开始还有${moment(gameTime).diff(moment(), 'hours')}小时` :
+    isTodaysGame(gameTime) ? '今日' : ''
+}
+
+const mapData = (games) => {
+  let items = [];
+  for (let date in games) {
+    games[date].forEach(game => {
+      const { webUrl, matchPeriod } = game;
+      const beforeGame = isBeforeStart(matchPeriod);
+      const title = getTitle(game)
+      const subtitle = getSubTitle(game);
+
+      const item = {
+        title,
+        subtitle,
+        arg: webUrl,
+      }
+      items.push(item);
+    })
   }
-});
+  return items;
+}
 
-// TODO 目前是按照两队胜场总和最多的排在前面， 以后可以根据目前排名 把排名排序
-const sortGame = (games) => sortBy(games, (game) => {
-  const { hTeam, vTeam } = game;
-  return -(Number(hTeam.win) + Number(vTeam.win));
-})
 
 const dataFlow = flow([
-  sortGame,
   mapData,
 ]);

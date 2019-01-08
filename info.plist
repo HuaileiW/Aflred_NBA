@@ -12,7 +12,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>282C5EF6-5162-4D2B-9288-A9AAA67A8C4B</string>
+				<string>A0E4E53F-705D-4E69-B3A6-F937E933E2A4</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -35,21 +35,19 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>lastpathcomponent</key>
-				<false/>
-				<key>onlyshowifquerypopulated</key>
-				<false/>
-				<key>removeextension</key>
-				<false/>
-				<key>text</key>
+				<key>browser</key>
 				<string></string>
-				<key>title</key>
-				<string>Result</string>
+				<key>spaces</key>
+				<string></string>
+				<key>url</key>
+				<string>{query}</string>
+				<key>utf8</key>
+				<true/>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.output.notification</string>
+			<string>alfred.workflow.action.openurl</string>
 			<key>uid</key>
-			<string>282C5EF6-5162-4D2B-9288-A9AAA67A8C4B</string>
+			<string>A0E4E53F-705D-4E69-B3A6-F937E933E2A4</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
@@ -112,7 +110,7 @@
 			<key>ypos</key>
 			<integer>230</integer>
 		</dict>
-		<key>282C5EF6-5162-4D2B-9288-A9AAA67A8C4B</key>
+		<key>A0E4E53F-705D-4E69-B3A6-F937E933E2A4</key>
 		<dict>
 			<key>xpos</key>
 			<integer>510</integer>
