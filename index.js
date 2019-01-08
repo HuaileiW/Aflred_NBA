@@ -45,6 +45,15 @@ const getSubTitle = ({ startTime: gameTime, matchPeriod }) => {
     isTodaysGame(gameTime) ? '今日' : ''
 }
 
+const getIcon = ({ isPay, rightId, leftId }) => {
+  if (rightId === '13' || leftId === '13') {
+    return './laker.png';
+  } else if (rightId === '10' || leftId === '10') {
+    return './rocket.png';
+  }
+  return isPay === '1' ? './vip.png' : './free.png'
+}
+
 const mapData = (games) => {
   let items = [];
   for (let date in games) {
@@ -58,11 +67,8 @@ const mapData = (games) => {
         title,
         subtitle,
         arg: webUrl,
-      }
-
-      if (isPay === '1') {
-        item.icon = {
-          path: './vip.png',
+        icon: {
+          path: getIcon(game),
         }
       }
       items.push(item);
