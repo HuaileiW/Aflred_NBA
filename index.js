@@ -17,7 +17,7 @@ alfy.fetch(`https://matchweb.sports.qq.com/kbs/list?from=NBA_PC&columnId=100000&
     alfy.error(`出错了...  ${error}`)
   });
 
-const isTodaysGame = gameTime => moment().endOf('day') > moment(gameTime);
+const isTodaysGame = gameTime => moment().add(1, 'day').startOf('day') > moment(gameTime);
 const isBeforeStart = matchPeriod => matchPeriod === '0';
 const isGameLive = matchPeriod => matchPeriod === '1';
 const gameStatus = matchPeriod => isBeforeStart(matchPeriod) ?
@@ -36,13 +36,16 @@ const getTitle = ({ rightName, leftName, leftGoal, rightGoal, matchPeriod }) => 
   return `${title} ${gameStatus(matchPeriod)}`;
 }
 
-const getSubTitle = ({ startTime: gameTime, matchPeriod }) => {
+const getSubTitle = ({ startTime: gameTime, matchPeriod, quarter, quarterTime }) => {
   const beforeGame = isBeforeStart(matchPeriod);
   const isInToday = isTodaysGame(gameTime);
 
-  return beforeGame ?
-    `${moment(gameTime).format('MM-DD HH:mm')} 距离开始还有${moment(gameTime).diff(moment(), 'hours')}小时` :
-    isTodaysGame(gameTime) ? '今日' : ''
+  return !isInToday ?
+    moment(gameTime).format('MM-DD HH:mm') :
+    beforeGame ?
+      `Today... ${moment(gameTime).format('HH:mm')} 距离开始还有${moment(gameTime).diff(moment(), 'hours')}小时` :
+      `Today... ${quarter} ${quarterTime}`;
+
 }
 
 const getIcon = ({ isPay, rightId, leftId }) => {
