@@ -26,14 +26,16 @@ const gameStatus = matchPeriod => isBeforeStart(matchPeriod) ?
   '直播中' :
   '已结束';
 
-const getTitle = ({ rightName, leftName, leftGoal, rightGoal, matchPeriod }) => {
+const getTitle = ({ rightName, leftName, leftGoal, rightGoal, matchPeriod, startTime: gameTime }) => {
   const beforeGame = isBeforeStart(matchPeriod);
   const isLive = isGameLive(matchPeriod);
+  const isInToday = isTodaysGame(gameTime);
+
   const title = beforeGame ?
     `${leftName} @ ${rightName}` :
     `${leftName}(${leftGoal}) @ ${rightName}(${rightGoal})`;
 
-  return `${title} ${gameStatus(matchPeriod)}`;
+  return isInToday ? `${title} ${gameStatus(matchPeriod)}` : title;
 }
 
 const getSubTitle = ({ startTime: gameTime, matchPeriod, quarter, quarterTime }) => {
@@ -45,7 +47,6 @@ const getSubTitle = ({ startTime: gameTime, matchPeriod, quarter, quarterTime })
     beforeGame ?
       `Today... ${moment(gameTime).format('HH:mm')} 距离开始还有${moment(gameTime).diff(moment(), 'hours')}小时` :
       `Today... ${quarter} ${quarterTime}`;
-
 }
 
 const getIcon = ({ isPay, rightId, leftId }) => {
