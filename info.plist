@@ -5,7 +5,7 @@
 	<key>bundleid</key>
 	<string>wang.huailei.www</string>
 	<key>category</key>
-	<string>Tools</string>
+	<string>Internet</string>
 	<key>connections</key>
 	<dict>
 		<key>243F3A69-C71E-4BBA-B534-F1BE679C35E1</key>
@@ -29,9 +29,28 @@
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>NBA</string>
+	<string>LoL</string>
 	<key>objects</key>
 	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>browser</key>
+				<string></string>
+				<key>spaces</key>
+				<string></string>
+				<key>url</key>
+				<string>{query}</string>
+				<key>utf8</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.openurl</string>
+			<key>uid</key>
+			<string>A0E4E53F-705D-4E69-B3A6-F937E933E2A4</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
@@ -46,7 +65,7 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>keyword</key>
-				<string>nba</string>
+				<string>lol</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -66,7 +85,7 @@
 				<key>subtext</key>
 				<string></string>
 				<key>title</key>
-				<string>Checkout Today's NBA</string>
+				<string>Checkout Today's LoL</string>
 				<key>type</key>
 				<integer>0</integer>
 				<key>withspace</key>
@@ -78,25 +97,6 @@
 			<string>243F3A69-C71E-4BBA-B534-F1BE679C35E1</string>
 			<key>version</key>
 			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>browser</key>
-				<string></string>
-				<key>spaces</key>
-				<string></string>
-				<key>url</key>
-				<string>{query}</string>
-				<key>utf8</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.openurl</string>
-			<key>uid</key>
-			<string>A0E4E53F-705D-4E69-B3A6-F937E933E2A4</string>
-			<key>version</key>
-			<integer>1</integer>
 		</dict>
 	</array>
 	<key>readme</key>
